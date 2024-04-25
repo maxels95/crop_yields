@@ -31,3 +31,13 @@
 /home/mikael/Desktop/Projects/Crop_yields/crop_yields/AgriWeatherTracker/obj/Debug/net7.0/AgriWeatherTracker.pdb
 /home/mikael/Desktop/Projects/Crop_yields/crop_yields/AgriWeatherTracker/obj/Debug/net7.0/AgriWeatherTracker.genruntimeconfig.cache
 /home/mikael/Desktop/Projects/Crop_yields/crop_yields/AgriWeatherTracker/obj/Debug/net7.0/ref/AgriWeatherTracker.dll
+/home/mikael/Desktop/Projects/Crop_yields/crop_yields/AgriWeatherTracker/bin/Debug/net7.0/Humanizer.dll
+/home/mikael/Desktop/Projects/Crop_yields/crop_yields/AgriWeatherTracker/bin/Debug/net7.0/Microsoft.EntityFrameworkCore.dll
+/home/mikael/Desktop/Projects/Crop_yields/crop_yields/AgriWeatherTracker/bin/Debug/net7.0/Microsoft.EntityFrameworkCore.Abstractions.dll
+/home/mikael/Desktop/Projects/Crop_yields/crop_yields/AgriWeatherTracker/bin/Debug/net7.0/Microsoft.EntityFrameworkCore.Design.dll
+/home/mikael/Desktop/Projects/Crop_yields/crop_yields/AgriWeatherTracker/bin/Debug/net7.0/Microsoft.EntityFrameworkCore.Relational.dll
+/home/mikael/Desktop/Projects/Crop_yields/crop_yields/AgriWeatherTracker/bin/Debug/net7.0/Microsoft.Extensions.DependencyModel.dll
+/home/mikael/Desktop/Projects/Crop_yields/crop_yields/AgriWeatherTracker/bin/Debug/net7.0/Mono.TextTemplating.dll
+/home/mikael/Desktop/Projects/Crop_yields/crop_yields/AgriWeatherTracker/bin/Debug/net7.0/Npgsql.dll
+/home/mikael/Desktop/Projects/Crop_yields/crop_yields/AgriWeatherTracker/bin/Debug/net7.0/Npgsql.EntityFrameworkCore.PostgreSQL.dll
+/home/mikael/Desktop/Projects/Crop_yields/crop_yields/AgriWeatherTracker/bin/Debug/net7.0/System.CodeDom.dll
