@@ -1,15 +1,18 @@
 using AgriWeatherTracker.Models;
 using Microsoft.AspNetCore.Mvc;
+using AutoMapper;
 
 [Route("api/[controller]")]
 [ApiController]
 public class CropController : ControllerBase
 {
     private readonly ICropRepository _cropRepository;
+    private readonly IMapper _mapper;
 
-    public CropController(ICropRepository cropRepository)
+    public CropController(ICropRepository cropRepository, IMapper mapper)
     {
         _cropRepository = cropRepository;
+        _mapper = mapper;
     }
 
     [HttpGet]
@@ -31,19 +34,21 @@ public class CropController : ControllerBase
     }
 
     [HttpPost]
-    public async Task<ActionResult<Crop>> PostCrop(Crop crop)
+    public async Task<ActionResult<Crop>> PostCrop(CropDTO cropDTO)
     {
+        var crop = _mapper.Map<Crop>(cropDTO);
         await _cropRepository.CreateCropAsync(crop);
         return CreatedAtAction(nameof(GetCrop), new { id = crop.Id }, crop);
     }
 
     [HttpPut("{id}")]
-    public async Task<IActionResult> PutCrop(int id, Crop crop)
+    public async Task<IActionResult> PutCrop(int id, CropDTO cropDTO)
     {
-        if (id != crop.Id)
+        if (id != cropDTO.Id)
         {
             return BadRequest();
         }
+        var crop = _mapper.Map<Crop>(cropDTO);
         await _cropRepository.UpdateCropAsync(crop);
         return NoContent();
     }

@@ -1,11 +1,14 @@
 {
   "version": 2,
-  "dgSpecHash": "O08dvGRVv4Qi8ZshY+OHx8wENrLLqJJ2tPOgRQD+UuGbzqOh6bojumf57pcc3TUQyDjBvkqMvo2ZsTEtHdZHSw==",
+  "dgSpecHash": "qcucpEiJCV5n4q6QMs0gBwldXTnJ/5XlLyIXrrY31+CmnOY798EBzHgVgv86KeDo5EKMQ21uJUR8oN5v/YOtsg==",
   "success": true,
   "projectFilePath": "/home/mikael/Desktop/Projects/Crop_yields/crop_yields/AgriWeatherTracker/AgriWeatherTracker.csproj",
   "expectedPackageFiles": [
+    "/home/mikael/.nuget/packages/automapper/12.0.1/automapper.12.0.1.nupkg.sha512",
+    "/home/mikael/.nuget/packages/automapper.extensions.microsoft.dependencyinjection/12.0.1/automapper.extensions.microsoft.dependencyinjection.12.0.1.nupkg.sha512",
     "/home/mikael/.nuget/packages/humanizer.core/2.14.1/humanizer.core.2.14.1.nupkg.sha512",
     "/home/mikael/.nuget/packages/microsoft.aspnetcore.openapi/7.0.14/microsoft.aspnetcore.openapi.7.0.14.nupkg.sha512",
+    "/home/mikael/.nuget/packages/microsoft.csharp/4.7.0/microsoft.csharp.4.7.0.nupkg.sha512",
     "/home/mikael/.nuget/packages/microsoft.entityframeworkcore/7.0.0/microsoft.entityframeworkcore.7.0.0.nupkg.sha512",
     "/home/mikael/.nuget/packages/microsoft.entityframeworkcore.abstractions/7.0.0/microsoft.entityframeworkcore.abstractions.7.0.0.nupkg.sha512",
     "/home/mikael/.nuget/packages/microsoft.entityframeworkcore.analyzers/7.0.0/microsoft.entityframeworkcore.analyzers.7.0.0.nupkg.sha512",

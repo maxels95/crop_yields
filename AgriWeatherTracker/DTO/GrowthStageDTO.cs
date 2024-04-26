@@ -8,3 +8,4 @@ public class GrowthStageDTO
     public ConditionThresholdDTO AdverseConditions { get; set; }
     public int ResilienceDurationInDays { get; set; }
 }
+

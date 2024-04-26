@@ -25,6 +25,8 @@ namespace AgriWeatherTracker.Data
                 .HasMany(c => c.Locations)
                 .WithOne(l => l.Crop)
                 .HasForeignKey(l => l.CropId);
+                
+            modelBuilder.Entity<Location>().Property(p => p.Id).ValueGeneratedOnAdd();
         }
     }
 }

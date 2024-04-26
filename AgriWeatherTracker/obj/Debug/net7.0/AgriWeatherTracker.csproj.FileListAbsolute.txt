@@ -41,3 +41,5 @@
 /home/mikael/Desktop/Projects/Crop_yields/crop_yields/AgriWeatherTracker/bin/Debug/net7.0/Npgsql.dll
 /home/mikael/Desktop/Projects/Crop_yields/crop_yields/AgriWeatherTracker/bin/Debug/net7.0/Npgsql.EntityFrameworkCore.PostgreSQL.dll
 /home/mikael/Desktop/Projects/Crop_yields/crop_yields/AgriWeatherTracker/bin/Debug/net7.0/System.CodeDom.dll
+/home/mikael/Desktop/Projects/Crop_yields/crop_yields/AgriWeatherTracker/bin/Debug/net7.0/AutoMapper.dll
+/home/mikael/Desktop/Projects/Crop_yields/crop_yields/AgriWeatherTracker/bin/Debug/net7.0/AutoMapper.Extensions.Microsoft.DependencyInjection.dll

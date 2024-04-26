@@ -1,4 +1,5 @@
 using AgriWeatherTracker.Models;
+using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 
 [Route("api/[controller]")]
@@ -6,10 +7,12 @@ using Microsoft.AspNetCore.Mvc;
 public class WeatherController : ControllerBase
 {
     private readonly IWeatherRepository _weatherRepository;
+    private readonly IMapper _mapper;
 
-    public WeatherController(IWeatherRepository weatherRepository)
+    public WeatherController(IWeatherRepository weatherRepository, IMapper mapper)
     {
         _weatherRepository = weatherRepository;
+        _mapper = mapper;
     }
 
     [HttpGet]
@@ -42,20 +45,22 @@ public class WeatherController : ControllerBase
     }
 
     [HttpPost]
-    public async Task<ActionResult<Weather>> PostWeather(Weather weather)
+    public async Task<ActionResult<Weather>> PostWeather(WeatherDTO weatherDTO)
     {
+        var weather = _mapper.Map<Weather>(weatherDTO);
         await _weatherRepository.CreateWeatherAsync(weather);
         return CreatedAtAction("GetWeather", new { id = weather.Id }, weather);
     }
 
     [HttpPut("{id}")]
-    public async Task<IActionResult> PutWeather(int id, Weather weather)
+    public async Task<IActionResult> PutWeather(int id, WeatherDTO weatherDTO)
     {
-        if (id != weather.Id)
+        if (id != weatherDTO.Id)
         {
             return BadRequest();
         }
 
+        var weather = _mapper.Map<Weather>(weatherDTO);
         await _weatherRepository.UpdateWeatherAsync(weather);
         return NoContent();
     }
