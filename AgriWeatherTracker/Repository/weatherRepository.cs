@@ -21,10 +21,10 @@ public class WeatherRepository : IWeatherRepository
         return await _context.Weathers.FindAsync(weatherId);
     }
 
-    public async Task<IEnumerable<Weather>> GetWeatherByCropAndLocationAsync(int cropId, int locationId)
+    public async Task<IEnumerable<Weather>> GetWeatherByLocationAsync(int locationId)
     {
         return await _context.Weathers
-            .Where(w => w.Location.Id == locationId && _context.CropLocations.Any(cl => cl.CropId == cropId && cl.LocationId == locationId))
+            .Where(w => w.Location.Id == locationId)
             .ToListAsync();
     }
 

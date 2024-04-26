@@ -31,9 +31,9 @@ public class WeatherController : ControllerBase
     }
 
     [HttpGet("byCropAndLocation")]
-    public async Task<ActionResult<IEnumerable<Weather>>> GetWeatherByCropAndLocation(int cropId, int locationId)
+    public async Task<ActionResult<IEnumerable<Weather>>> GetWeatherByLocation(int locationId)
     {
-        var weathers = await _weatherRepository.GetWeatherByCropAndLocationAsync(cropId, locationId);
+        var weathers = await _weatherRepository.GetWeatherByLocationAsync(locationId);
         if (weathers == null || !weathers.Any())
         {
             return NotFound();
