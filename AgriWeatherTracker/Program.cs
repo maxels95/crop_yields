@@ -14,6 +14,9 @@ builder.Services.AddAutoMapper(Assembly.GetExecutingAssembly());
 builder.Services.AddScoped<ICropRepository, CropRepository>();
 builder.Services.AddScoped<IWeatherRepository, WeatherRepository>();
 builder.Services.AddScoped<ILocationRepository, LocationRepository>();
+builder.Services.AddScoped<IConditionThresholdRepository, ConditionThresholdRepository>();
+builder.Services.AddScoped<IGrowthCycleRepository, GrowthCycleRepository>();
+builder.Services.AddScoped<IGrowthStageRepository, GrowthStageRepository>();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();

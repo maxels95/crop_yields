@@ -7,5 +7,6 @@ public class GrowthStageDTO
     public ConditionThresholdDTO OptimalConditions { get; set; }
     public ConditionThresholdDTO AdverseConditions { get; set; }
     public int ResilienceDurationInDays { get; set; }
+    public double HistoricalAdverseImpactScore { get; set; }
 }
 

@@ -10,4 +10,5 @@ public class GrowthStage
         public ConditionThreshold OptimalConditions { get; set; }
         public ConditionThreshold AdverseConditions { get; set; }
         public int ResilienceDurationInDays { get; set; }  // Duration the stage can withstand adverse conditions
+        public double HistoricalAdverseImpactScore { get; set; }
     }
