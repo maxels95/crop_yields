@@ -5,4 +5,5 @@ public interface IGrowthStageRepository
     Task AddAsync(GrowthStage growthStage);
     Task UpdateAsync(GrowthStage growthStage);
     Task DeleteAsync(int id);
+    void SetEntityStateUnchanged<T>(T growthStage);
 }

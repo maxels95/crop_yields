@@ -27,6 +27,22 @@ namespace AgriWeatherTracker.Data
                 .HasForeignKey(l => l.CropId);
                 
             modelBuilder.Entity<Location>().Property(p => p.Id).ValueGeneratedOnAdd();
+
+            modelBuilder.Entity<GrowthStage>()
+                .Property(e => e.StartDate)
+                .HasConversion(v => v.ToUniversalTime(), v => DateTime.SpecifyKind(v, DateTimeKind.Utc));
+
+            modelBuilder.Entity<GrowthStage>()
+                .Property(e => e.EndDate)
+                .HasConversion(v => v.ToUniversalTime(), v => DateTime.SpecifyKind(v, DateTimeKind.Utc));
+
+            modelBuilder.Entity<ConditionThreshold>()
+                .Property(p => p.Id)
+                .ValueGeneratedOnAdd();
+
+            modelBuilder.Entity<GrowthStage>()
+                .Property(p => p.Id)
+                .ValueGeneratedOnAdd();
         }
     }
 }

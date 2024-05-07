@@ -1,6 +1,7 @@
 public class ConditionThresholdDTO
 {
     public int Id { get; set; }
+    public string Name { get; set; }
     public double MinTemperature { get; set; }
     public double MaxTemperature { get; set; }
     public double OptimalHumidity { get; set; }

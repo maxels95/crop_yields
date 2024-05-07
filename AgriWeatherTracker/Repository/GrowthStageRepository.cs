@@ -1,17 +1,22 @@
+using System.IO.Compression;
+using AgriWeatherTracker.Data;
 using Microsoft.EntityFrameworkCore;
 
 public class GrowthStageRepository : IGrowthStageRepository
 {
-    private readonly DbContext _context;
+    private readonly AppDbContext _context;
 
-    public GrowthStageRepository(DbContext context)
+    public GrowthStageRepository(AppDbContext context)
     {
         _context = context;
     }
 
     public async Task<IEnumerable<GrowthStage>> GetAllAsync()
     {
-        return await _context.Set<GrowthStage>().ToListAsync();
+        return await _context.Set<GrowthStage>()
+                        .Include(gs => gs.OptimalConditions)
+                        .Include(gs => gs.AdverseConditions)
+                        .ToListAsync();
     }
 
     public async Task<GrowthStage> GetByIdAsync(int id)
@@ -39,5 +44,11 @@ public class GrowthStageRepository : IGrowthStageRepository
             _context.Set<GrowthStage>().Remove(item);
             await _context.SaveChangesAsync();
         }
+    }
+
+    public void SetEntityStateUnchanged<T>(T entity)
+    {
+        _context.Attach(entity);
+        _context.Entry(entity).State = EntityState.Unchanged;
     }
 }

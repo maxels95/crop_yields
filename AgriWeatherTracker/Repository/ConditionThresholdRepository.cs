@@ -1,10 +1,11 @@
+using AgriWeatherTracker.Data;
 using Microsoft.EntityFrameworkCore;
 
 public class ConditionThresholdRepository : IConditionThresholdRepository
 {
-    private readonly DbContext _context;
+    private readonly AppDbContext _context;
 
-    public ConditionThresholdRepository(DbContext context)
+    public ConditionThresholdRepository(AppDbContext context)
     {
         _context = context;
     }

@@ -35,10 +35,26 @@ public class GrowthCycleController : ControllerBase
     [HttpPost]
     public async Task<ActionResult<GrowthCycleDTO>> Create(GrowthCycleDTO dto)
     {
+        // Map DTO to domain model, including nested stages and conditions
         var cycle = _mapper.Map<GrowthCycle>(dto);
+
+        // Optional: Manually attach existing related entities to prevent duplicates
+        foreach (var stage in cycle.Stages)
+        {
+            _repository.SetEntityStateUnchanged(stage);
+        }
+        
+
+        // Add the new GrowthCycle to the database
         await _repository.AddAsync(cycle);
+
+        // Save changes and return result
+        // await _repository.SaveChangesAsync();
+
+        // Map the saved entity back to DTO to return
         return CreatedAtAction(nameof(Get), new { id = cycle.Id }, _mapper.Map<GrowthCycleDTO>(cycle));
     }
+
 
     [HttpPut("{id}")]
     public async Task<IActionResult> Update(int id, GrowthCycleDTO dto)

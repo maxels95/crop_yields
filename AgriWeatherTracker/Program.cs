@@ -4,6 +4,8 @@ using AgriWeatherTracker.Data;
 using AutoMapper;
 using System.Reflection;
 
+// Enable legacy timestamp behavior
+AppContext.SetSwitch("Npgsql.EnableLegacyTimestampBehavior", true);
 
 var builder = WebApplication.CreateBuilder(args);
 
