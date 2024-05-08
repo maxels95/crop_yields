@@ -28,6 +28,12 @@ namespace AgriWeatherTracker.Data
                 
             modelBuilder.Entity<Location>().Property(p => p.Id).ValueGeneratedOnAdd();
 
+            modelBuilder.Entity<Location>()
+                .HasOne(l => l.Crop)
+                .WithMany(c => c.Locations)
+                .HasForeignKey(l => l.CropId)
+                .IsRequired(false);  // Indicates that the foreign key is not required
+
             modelBuilder.Entity<GrowthStage>()
                 .Property(e => e.StartDate)
                 .HasConversion(v => v.ToUniversalTime(), v => DateTime.SpecifyKind(v, DateTimeKind.Utc));

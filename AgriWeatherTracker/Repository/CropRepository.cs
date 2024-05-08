@@ -13,7 +13,15 @@ public class CropRepository : ICropRepository
 
     public async Task<IEnumerable<Crop>> GetAllCropsAsync()
     {
-        return await _context.Crops.ToListAsync();
+        return await _context.Crops
+                        .Include(c => c.GrowthCycles)
+                        .ThenInclude(gc => gc.Stages)
+                        .ThenInclude(ct => ct.AdverseConditions)
+                        .Include(c => c.GrowthCycles)
+                        .ThenInclude(gc => gc.Stages)
+                        .ThenInclude(ct => ct.OptimalConditions)
+                        .Include(c => c.Locations)
+                        .ToListAsync();
     }
 
     public async Task<Crop> GetCropByIdAsync(int cropId)
@@ -38,5 +46,10 @@ public class CropRepository : ICropRepository
         var crop = await _context.Crops.FindAsync(cropId);
         _context.Crops.Remove(crop);
         await _context.SaveChangesAsync();
+    }
+
+    public void SetEntityStateUnchanged<T>(T entity)
+    {
+        _context.Entry(entity).State = EntityState.Unchanged;
     }
 }

@@ -7,11 +7,16 @@ using AutoMapper;
 public class CropController : ControllerBase
 {
     private readonly ICropRepository _cropRepository;
+    private readonly ILocationRepository _locationRepository;
+    private readonly IGrowthCycleRepository _growthCycleRepository;
     private readonly IMapper _mapper;
 
-    public CropController(ICropRepository cropRepository, IMapper mapper)
+    public CropController(ICropRepository cropRepository, IMapper mapper, 
+        ILocationRepository locationRepository, IGrowthCycleRepository growthCycleRepository)
     {
         _cropRepository = cropRepository;
+        _locationRepository = locationRepository;
+        _growthCycleRepository = growthCycleRepository;
         _mapper = mapper;
     }
 
@@ -36,7 +41,33 @@ public class CropController : ControllerBase
     [HttpPost]
     public async Task<ActionResult<Crop>> PostCrop(CropDTO cropDTO)
     {
+        List<Location> locations = new List<Location>();
+        List<GrowthCycle> growthCycles = new List<GrowthCycle>();
+
+        foreach (int id in cropDTO.Locations)
+        {
+            var location = await _locationRepository.GetByIdAsync(id);
+            if (location != null)
+            {
+                _cropRepository.SetEntityStateUnchanged(location);
+                locations.Add(location);  // Add to list
+            }
+        }
+
+        foreach (int id in cropDTO.GrowthCycles)
+        {
+            var growthCycle = await _growthCycleRepository.GetByIdAsync(id);
+            if (growthCycle != null)
+            {
+                _cropRepository.SetEntityStateUnchanged(growthCycle);
+                growthCycles.Add(growthCycle);  // Add to list
+            }
+        }
+
         var crop = _mapper.Map<Crop>(cropDTO);
+        crop.Locations = locations;
+        crop.GrowthCycles = growthCycles;
+
         await _cropRepository.CreateCropAsync(crop);
         return CreatedAtAction(nameof(GetCrop), new { id = crop.Id }, crop);
     }

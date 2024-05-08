@@ -7,5 +7,6 @@ public interface ICropRepository
     Task CreateCropAsync(Crop crop);
     Task UpdateCropAsync(Crop crop);
     Task DeleteCropAsync(int cropId);
+    void SetEntityStateUnchanged<T>(T entity);
 }
 

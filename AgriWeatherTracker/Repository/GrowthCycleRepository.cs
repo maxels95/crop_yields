@@ -14,6 +14,9 @@ public class GrowthCycleRepository : IGrowthCycleRepository
     {
         return await _context.Set<GrowthCycle>()
                         .Include(gc => gc.Stages)
+                        .ThenInclude(stage => stage.OptimalConditions)
+                        .Include(gc => gc.Stages)
+                        .ThenInclude(stage => stage.AdverseConditions)
                         .ToListAsync();
     }
 
