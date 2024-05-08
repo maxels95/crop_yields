@@ -8,4 +8,5 @@ public interface IWeatherRepository
     Task CreateWeatherAsync(Weather weather);
     Task UpdateWeatherAsync(Weather weather);
     Task DeleteWeatherAsync(int weatherId);
+    void SetEntityStateUnchanged<T>(T entity);
 }

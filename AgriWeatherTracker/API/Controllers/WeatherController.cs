@@ -7,11 +7,14 @@ using Microsoft.AspNetCore.Mvc;
 public class WeatherController : ControllerBase
 {
     private readonly IWeatherRepository _weatherRepository;
+    private readonly ILocationRepository _locationRepository;
     private readonly IMapper _mapper;
 
-    public WeatherController(IWeatherRepository weatherRepository, IMapper mapper)
+    public WeatherController(IWeatherRepository weatherRepository, IMapper mapper,
+                    ILocationRepository locationRepository)
     {
         _weatherRepository = weatherRepository;
+        _locationRepository = locationRepository;
         _mapper = mapper;
     }
 
@@ -47,7 +50,14 @@ public class WeatherController : ControllerBase
     [HttpPost]
     public async Task<ActionResult<Weather>> PostWeather(WeatherDTO weatherDTO)
     {
+        var location = await _locationRepository.GetByIdAsync(weatherDTO.LocationId);
         var weather = _mapper.Map<Weather>(weatherDTO);
+
+        if (location != null) {
+            _weatherRepository.SetEntityStateUnchanged(location);
+            weather.Location = location;
+        }
+
         await _weatherRepository.CreateWeatherAsync(weather);
         return CreatedAtAction("GetWeather", new { id = weather.Id }, weather);
     }

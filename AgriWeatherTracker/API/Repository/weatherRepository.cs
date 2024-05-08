@@ -13,7 +13,10 @@ public class WeatherRepository : IWeatherRepository
 
     public async Task<IEnumerable<Weather>> GetAllWeatherAsync()
     {
-        return await _context.Weathers.ToListAsync();
+        return await _context.Weathers
+                        .Include(w => w.Location)
+                        .ThenInclude(l => l.Crop)
+                        .ToListAsync();
     }
 
     public async Task<Weather> GetWeatherByIdAsync(int weatherId)
@@ -48,5 +51,11 @@ public class WeatherRepository : IWeatherRepository
             _context.Weathers.Remove(weather);
             await _context.SaveChangesAsync();
         }
+    }
+
+    public void SetEntityStateUnchanged<T>(T entity)
+    {
+        _context.Attach(entity);
+        _context.Entry(entity).State = EntityState.Unchanged;
     }
 }

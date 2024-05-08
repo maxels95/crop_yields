@@ -35,6 +35,14 @@ public class MappingProfile : Profile
 
         CreateMap<Weather, WeatherDTO>()
             .ForMember(dest => dest.LocationId, opt => opt.MapFrom(src => src.Location.Id));
+        CreateMap<WeatherDTO, Weather>()
+            .ForMember(dest => dest.Id, opt => opt.MapFrom(src => src.Id))
+            .ForMember(dest => dest.Date, opt => opt.MapFrom(src => src.Date))
+            .ForMember(dest => dest.Temperature, opt => opt.MapFrom(src => src.Temperature))
+            .ForMember(dest => dest.Humidity, opt => opt.MapFrom(src => src.Humidity))
+            .ForMember(dest => dest.Rainfall, opt => opt.MapFrom(src => src.Rainfall))
+            .ForMember(dest => dest.WindSpeed, opt => opt.MapFrom(src => src.WindSpeed))
+            .ForMember(dest => dest.Location, opt => opt.MapFrom(src => new Location { Id = src.LocationId }));
 
         CreateMap<ConditionThreshold, ConditionThresholdDTO>();
         CreateMap<ConditionThresholdDTO, ConditionThreshold>()
