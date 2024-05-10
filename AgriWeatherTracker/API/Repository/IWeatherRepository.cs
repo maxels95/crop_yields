@@ -9,4 +9,5 @@ public interface IWeatherRepository
     Task UpdateWeatherAsync(Weather weather);
     Task DeleteWeatherAsync(int weatherId);
     void SetEntityStateUnchanged<T>(T entity);
+    Task<List<Weather>> GetWeatherData(int cropId, int locationId, DateTime startDate, DateTime endDate);
 }

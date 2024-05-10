@@ -58,4 +58,12 @@ public class WeatherRepository : IWeatherRepository
         _context.Attach(entity);
         _context.Entry(entity).State = EntityState.Unchanged;
     }
+
+    public async Task<List<Weather>> GetWeatherData(int cropId, int locationId, DateTime startDate, DateTime endDate)
+    {
+        return await _context.Weathers
+            .Where(w => w.Location.CropId == cropId && w.Location.Id == locationId)
+            .Where(w => w.Date >= startDate && w.Date <= endDate)
+            .ToListAsync();
+    }
 }

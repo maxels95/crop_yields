@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "qcucpEiJCV5n4q6QMs0gBwldXTnJ/5XlLyIXrrY31+CmnOY798EBzHgVgv86KeDo5EKMQ21uJUR8oN5v/YOtsg==",
+  "dgSpecHash": "EIIPCMMWXJGYiE35mx8WhFknX6OS7jctLKsxStKHbcy8P2LO6r3t2YhFIP/+t4tPK6bJ5drHz1w8A7Q08e8IyQ==",
   "success": true,
-  "projectFilePath": "/home/mikael/Desktop/Projects/Crop_yields/crop_yields/AgriWeatherTracker/AgriWeatherTracker.csproj",
+  "projectFilePath": "/home/mikael/Desktop/Projects/Crop_yields/crop_yields/AgriWeatherTracker/API/AgriWeatherTracker.csproj",
   "expectedPackageFiles": [
     "/home/mikael/.nuget/packages/automapper/12.0.1/automapper.12.0.1.nupkg.sha512",
     "/home/mikael/.nuget/packages/automapper.extensions.microsoft.dependencyinjection/12.0.1/automapper.extensions.microsoft.dependencyinjection.12.0.1.nupkg.sha512",

@@ -1632,11 +1632,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "/home/mikael/Desktop/Projects/Crop_yields/crop_yields/AgriWeatherTracker/AgriWeatherTracker.csproj",
+      "projectUniqueName": "/home/mikael/Desktop/Projects/Crop_yields/crop_yields/AgriWeatherTracker/API/AgriWeatherTracker.csproj",
       "projectName": "AgriWeatherTracker",
-      "projectPath": "/home/mikael/Desktop/Projects/Crop_yields/crop_yields/AgriWeatherTracker/AgriWeatherTracker.csproj",
+      "projectPath": "/home/mikael/Desktop/Projects/Crop_yields/crop_yields/AgriWeatherTracker/API/AgriWeatherTracker.csproj",
       "packagesPath": "/home/mikael/.nuget/packages/",
-      "outputPath": "/home/mikael/Desktop/Projects/Crop_yields/crop_yields/AgriWeatherTracker/obj/",
+      "outputPath": "/home/mikael/Desktop/Projects/Crop_yields/crop_yields/AgriWeatherTracker/API/obj/",
       "projectStyle": "PackageReference",
       "configFilePaths": [
         "/home/mikael/.nuget/NuGet/NuGet.Config"
