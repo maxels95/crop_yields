@@ -82,18 +82,18 @@ public class WeatherController : ControllerBase
         return NoContent();
     }
 
-    [HttpGet("calculate-health")]
-    public async Task<IActionResult> CalculateHealth([FromQuery] HealthRequestDto request)
-    {
-        var weatherData = await _weatherService.GetWeatherData(request.CropId, request.LocationId, request.StartDate, request.EndDate);
-        var healthScores = new List<HealthScoreDto>();
+    // [HttpGet("calculate-health")]
+    // public async Task<IActionResult> CalculateHealth([FromQuery] HealthRequestDto request)
+    // {
+    //     var weatherData = await _weatherService.GetWeatherData(request.CropId, request.LocationId, request.StartDate, request.EndDate);
+    //     var healthScores = new List<HealthScoreDto>();
 
-        foreach (var weather in weatherData)
-        {
-            var score = _evaluationService.Evaluate(weather);
-            healthScores.Add(new HealthScoreDto { Date = weather.Date, Score = score });
-        }
+    //     foreach (var weather in weatherData)
+    //     {
+    //         var score = _evaluationService.Evaluate(weather);
+    //         healthScores.Add(new HealthScoreDto { Date = weather.Date, Score = score });
+    //     }
 
-        return Ok(healthScores);
-    }
+    //     return Ok(healthScores);
+    // }
 }
