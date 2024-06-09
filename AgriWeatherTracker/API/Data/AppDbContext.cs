@@ -26,6 +26,11 @@ namespace AgriWeatherTracker.Data
                 .HasMany(c => c.Locations)
                 .WithOne(l => l.Crop)
                 .HasForeignKey(l => l.CropId);
+
+            modelBuilder.Entity<Crop>()
+                .HasOne(c => c.HealthScore)
+                .WithOne(hs => hs.Crop)
+                .HasForeignKey<HealthScore>(hs => hs.CropId);
                 
             modelBuilder.Entity<Location>().Property(p => p.Id).ValueGeneratedOnAdd();
 
@@ -52,13 +57,15 @@ namespace AgriWeatherTracker.Data
                 .ValueGeneratedOnAdd();
 
             modelBuilder.Entity<HealthScore>()
-                .HasOne(h => h.Crop)
-                .WithOne(c => c.HealthScore)  // Assuming you have a HealthScore property in Crop
-                .HasForeignKey<HealthScore>(h => h.CropId);
+                .HasKey(hs => hs.CropId);
 
             modelBuilder.Entity<HealthScore>()
                 .Property(h => h.Score)
                 .HasDefaultValue(0);
+
+            modelBuilder.Entity<HealthScore>()
+                .Property(hs => hs.Id)
+                .ValueGeneratedNever();
                 
         }
     }

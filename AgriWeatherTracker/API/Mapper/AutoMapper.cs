@@ -47,6 +47,8 @@ public class MappingProfile : Profile
         CreateMap<ConditionThreshold, ConditionThresholdDTO>();
         CreateMap<ConditionThresholdDTO, ConditionThreshold>()
             .ForMember(dest => dest.Name, opt => opt.MapFrom(src => src.Name));
+
+        CreateMap<HealthScore, HealthScoreDto>().ReverseMap();
     }
 }
 
