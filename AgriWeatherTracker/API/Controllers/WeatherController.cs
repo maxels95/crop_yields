@@ -96,4 +96,20 @@ public class WeatherController : ControllerBase
 
     //     return Ok(healthScores);
     // }
+
+    [HttpDelete("byLocation/{locationId}")]
+    public async Task<IActionResult> DeleteWeatherByLocation(int locationId)
+    {
+        // Check if the location actually exists
+        var location = await _locationRepository.GetByIdAsync(locationId);
+        if (location == null)
+        {
+            return NotFound($"Location with ID {locationId} not found.");
+        }
+
+        // Delete all weather data for the given location
+        await _weatherRepository.DeleteWeatherByLocationIdAsync(locationId);
+        return NoContent(); // Return a 204 No Content response indicating successful deletion
+    }
+
 }

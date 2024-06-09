@@ -15,6 +15,7 @@ namespace AgriWeatherTracker.Data
         public DbSet<GrowthCycle> GrowthCycles { get; set; }
         public DbSet<GrowthStage> GrowthStages { get; set; }
         public DbSet<ConditionThreshold> ConditionThresholds { get; set; }
+        public DbSet<HealthScore> HealthScores { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -49,6 +50,16 @@ namespace AgriWeatherTracker.Data
             modelBuilder.Entity<GrowthStage>()
                 .Property(p => p.Id)
                 .ValueGeneratedOnAdd();
+
+            modelBuilder.Entity<HealthScore>()
+                .HasOne(h => h.Crop)
+                .WithOne(c => c.HealthScore)  // Assuming you have a HealthScore property in Crop
+                .HasForeignKey<HealthScore>(h => h.CropId);
+
+            modelBuilder.Entity<HealthScore>()
+                .Property(h => h.Score)
+                .HasDefaultValue(0);
+                
         }
     }
 }

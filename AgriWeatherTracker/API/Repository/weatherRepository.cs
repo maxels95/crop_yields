@@ -66,4 +66,17 @@ public class WeatherRepository : IWeatherRepository
             .Where(w => w.Date >= startDate && w.Date <= endDate)
             .ToListAsync();
     }
+
+    public async Task DeleteWeatherByLocationIdAsync(int locationId)
+    {
+        var weathers = await _context.Weathers
+            .Where(w => w.Location.Id == locationId)
+            .ToListAsync();
+
+        if (weathers.Any())
+        {
+            _context.Weathers.RemoveRange(weathers);
+            await _context.SaveChangesAsync();
+        }
+    }
 }
