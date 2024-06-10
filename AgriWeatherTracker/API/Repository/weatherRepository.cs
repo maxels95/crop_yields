@@ -79,4 +79,14 @@ public class WeatherRepository : IWeatherRepository
             await _context.SaveChangesAsync();
         }
     }
+
+    public async Task<IEnumerable<Weather>> GetWeatherByCropAndDateRangeAsync(int cropId, DateTime startDate, int days)
+    {
+        DateTime endDate = startDate.AddDays(days);
+        return await _context.Weathers
+            .Include(w => w.Location)
+            .Where(w => w.Location.CropId == cropId && w.Date >= startDate && w.Date <= endDate)
+            .ToListAsync();
+    }
+
 }

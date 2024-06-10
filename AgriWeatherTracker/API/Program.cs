@@ -22,6 +22,7 @@ builder.Services.AddScoped<ILocationRepository, LocationRepository>();
 builder.Services.AddScoped<IConditionThresholdRepository, ConditionThresholdRepository>();
 builder.Services.AddScoped<IGrowthCycleRepository, GrowthCycleRepository>();
 builder.Services.AddScoped<IGrowthStageRepository, GrowthStageRepository>();
+builder.Services.AddScoped<IHealthScoreRepository, HealthScoreRepository>();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();

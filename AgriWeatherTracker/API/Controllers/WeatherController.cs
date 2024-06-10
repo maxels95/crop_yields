@@ -112,4 +112,17 @@ public class WeatherController : ControllerBase
         return NoContent(); // Return a 204 No Content response indicating successful deletion
     }
 
+    [HttpGet("byCrop/{cropId}/{days}")]
+    public async Task<ActionResult<IEnumerable<Weather>>> GetWeatherByCropAndDays(int cropId, int days)
+    {
+        DateTime startDate = DateTime.Today.AddDays(-days); // Fetching data from the past number of days
+        var weathers = await _weatherRepository.GetWeatherByCropAndDateRangeAsync(cropId, startDate, days);
+        if (!weathers.Any())
+        {
+            return NotFound($"No weather data found for crop ID {cropId} in the last {days} days.");
+        }
+        return Ok(weathers);
+    }
+
+
 }

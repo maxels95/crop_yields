@@ -8,11 +8,13 @@ using AutoMapper;
 public class HealthScoreController : ControllerBase
 {
     private readonly IHealthScoreRepository _healthScoreRepository;
+    private readonly ICropRepository _cropRepository;
     private readonly IMapper _mapper;
 
-    public HealthScoreController(IHealthScoreRepository healthScoreRepository, IMapper mapper)
+    public HealthScoreController(IHealthScoreRepository healthScoreRepository, ICropRepository cropRepository, IMapper mapper)
     {
         _healthScoreRepository = healthScoreRepository;
+        _cropRepository = cropRepository;
         _mapper = mapper;
     }
 
@@ -32,7 +34,14 @@ public class HealthScoreController : ControllerBase
     [HttpPost]
     public async Task<ActionResult<HealthScoreDto>> PostHealthScore(HealthScoreDto healthScoreDto)
     {
+        var crop = await _cropRepository.GetCropByIdAsync(healthScoreDto.CropId);
         var healthScore = _mapper.Map<HealthScore>(healthScoreDto);
+
+        if (crop != null) {
+                _cropRepository.SetEntityStateUnchanged(crop);
+                healthScore.Crop = crop;
+        }
+
         await _healthScoreRepository.CreateHealthScoreAsync(healthScore);
         return CreatedAtAction(nameof(GetHealthScore), new { id = healthScore.Id }, _mapper.Map<HealthScoreDto>(healthScore));
     }
@@ -48,6 +57,7 @@ public class HealthScoreController : ControllerBase
         }
 
         healthScore.Score = score;
+        healthScore.Date = DateTime.Now;
         await _healthScoreRepository.UpdateHealthScoreAsync(healthScore);
         return NoContent();
     }
