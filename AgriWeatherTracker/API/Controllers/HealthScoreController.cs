@@ -57,7 +57,7 @@ public class HealthScoreController : ControllerBase
         }
 
         healthScore.Score = score;
-        healthScore.Date = DateTime.Now;
+        healthScore.Date = DateTime.UtcNow;
         await _healthScoreRepository.UpdateHealthScoreAsync(healthScore);
         return NoContent();
     }
