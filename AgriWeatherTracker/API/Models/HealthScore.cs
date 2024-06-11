@@ -1,8 +1,10 @@
 public class HealthScore
 {
-    public int Id { get; set; }  // Primary key for HealthScore
-    public int CropId { get; set; }  // Foreign key to Crop
+    public int Id { get; set; }
+    public int CropId { get; set; }
     public Crop Crop { get; set; }
+    public int LocationId { get; set; }
+    public Location Location { get; set; }
     public DateTime Date { get; set; }
     public double Score { get; set; }
 }

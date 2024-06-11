@@ -7,6 +7,6 @@ using System.Collections.Generic;
     public string Name { get; set; }
     public List<GrowthCycle> GrowthCycles { get; set; } = new List<GrowthCycle>();
     public List<Location> Locations { get; set; } = new List<Location>(); // Directly linking locations to crops
-    public HealthScore HealthScore { get; set; }
+    public List<HealthScore> HealthScores { get; set; } = new List<HealthScore>();
 }
 

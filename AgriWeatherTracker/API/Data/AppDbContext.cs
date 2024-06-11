@@ -28,9 +28,10 @@ namespace AgriWeatherTracker.Data
                 .HasForeignKey(l => l.CropId);
 
             modelBuilder.Entity<Crop>()
-                .HasOne(c => c.HealthScore)
+                .HasMany(c => c.HealthScores)
                 .WithOne(hs => hs.Crop)
-                .HasForeignKey<HealthScore>(hs => hs.CropId);
+                .HasForeignKey(hs => hs.CropId)
+                .OnDelete(DeleteBehavior.Cascade);
                 
             modelBuilder.Entity<Location>().Property(p => p.Id).ValueGeneratedOnAdd();
 
@@ -57,7 +58,9 @@ namespace AgriWeatherTracker.Data
                 .ValueGeneratedOnAdd();
 
             modelBuilder.Entity<HealthScore>()
-                .HasKey(hs => hs.CropId);
+                .HasOne(hs => hs.Crop)
+                .WithMany(c => c.HealthScores)
+                .HasForeignKey(hs => hs.CropId);
 
             modelBuilder.Entity<HealthScore>()
                 .Property(h => h.Score)
@@ -65,8 +68,13 @@ namespace AgriWeatherTracker.Data
 
             modelBuilder.Entity<HealthScore>()
                 .Property(hs => hs.Id)
-                .ValueGeneratedNever();
-                
+                .ValueGeneratedOnAdd();
+
+            modelBuilder.Entity<HealthScore>()
+                .HasOne(hs => hs.Location)
+                .WithMany()
+                .HasForeignKey(hs => hs.LocationId)
+                .OnDelete(DeleteBehavior.Restrict);
         }
     }
 }
