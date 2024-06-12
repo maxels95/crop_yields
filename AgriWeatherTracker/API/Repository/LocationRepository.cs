@@ -23,6 +23,13 @@ public class LocationRepository : ILocationRepository
         return await _context.Locations.FindAsync(id);
     }
 
+    public async Task<IEnumerable<Location>> GetLocationsByCropIdAsync(int cropId)
+    {
+        return await _context.Locations
+                             .Where(l => l.CropId == cropId)
+                             .ToListAsync();
+    }
+
     public async Task AddAsync(Location location)
     {
         _context.Locations.Add(location);

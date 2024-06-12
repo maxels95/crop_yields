@@ -30,6 +30,17 @@ public class HealthScoreController : ControllerBase
         return _mapper.Map<HealthScoreDto>(healthScore);
     }
 
+    [HttpGet("byCrop/{cropId}")]
+    public async Task<ActionResult<IEnumerable<HealthScoreDto>>> GetHealthScoresByCrop(int cropId)
+    {
+        var healthScores = await _healthScoreRepository.GetHealthScoresByCropIdAsync(cropId);
+        if (!healthScores.Any())
+        {
+            return NotFound($"No health scores found for crop with ID {cropId}.");
+        }
+        return Ok(_mapper.Map<IEnumerable<HealthScoreDto>>(healthScores));
+    }
+
     // POST: api/HealthScore
     [HttpPost]
     public async Task<ActionResult<HealthScoreDto>> PostHealthScore(HealthScoreDto healthScoreDto)

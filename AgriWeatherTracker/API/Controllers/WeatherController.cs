@@ -112,17 +112,17 @@ public class WeatherController : ControllerBase
         return NoContent(); // Return a 204 No Content response indicating successful deletion
     }
 
-    [HttpGet("byCrop/{cropId}/{days}")]
-    public async Task<ActionResult<IEnumerable<Weather>>> GetWeatherByCropAndDays(int cropId, int days)
+    [HttpGet("byLocation/{locationId}/{days}")]
+    public async Task<ActionResult<IEnumerable<Weather>>> GetWeatherByLocationAndDays(int locationId, int days)
     {
-        DateTime startDate = DateTime.Today.AddDays(-days); // Fetching data from the past number of days
-        var weathers = await _weatherRepository.GetWeatherByCropAndDateRangeAsync(cropId, startDate, days);
-        if (!weathers.Any())
+        DateTime endDate = DateTime.UtcNow;
+        DateTime startDate = endDate.AddDays(-days);  // Calculate the start date by subtracting days from today
+
+        var weathers = await _weatherRepository.GetWeatherByLocationAndDateRangeAsync(locationId, startDate, endDate);
+        if (weathers == null || !weathers.Any())
         {
-            return NotFound($"No weather data found for crop ID {cropId} in the last {days} days.");
+            return NotFound($"No weather data found for location ID {locationId} from {startDate.ToShortDateString()} to {endDate.ToShortDateString()}.");
         }
         return Ok(weathers);
     }
-
-
 }

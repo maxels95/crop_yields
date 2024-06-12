@@ -17,6 +17,13 @@ public class HealthScoreRepository : IHealthScoreRepository
         return await _context.HealthScores.Include(hs => hs.Crop).FirstOrDefaultAsync(hs => hs.Id == id);
     }
 
+    public async Task<IEnumerable<HealthScore>> GetHealthScoresByCropIdAsync(int cropId)
+    {
+        return await _context.HealthScores
+                             .Where(hs => hs.CropId == cropId)
+                             .ToListAsync();
+    }
+
     public async Task CreateHealthScoreAsync(HealthScore healthScore)
     {
         _context.HealthScores.Add(healthScore);

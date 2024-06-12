@@ -37,6 +37,17 @@ public class LocationController : ControllerBase
         return Ok(_mapper.Map<LocationDTO>(location));
     }
 
+    [HttpGet("{cropId}/locations")]
+    public async Task<ActionResult<IEnumerable<LocationDTO>>> GetLocationsByCrop(int cropId)
+    {
+        var locations = await _locationRepository.GetLocationsByCropIdAsync(cropId);
+        if (locations == null || !locations.Any())
+        {
+            return NotFound($"No locations found for crop with ID {cropId}.");
+        }
+        return Ok(_mapper.Map<IEnumerable<LocationDTO>>(locations));
+    }
+
     // POST: api/Location
     [HttpPost]
     public async Task<ActionResult<LocationDTO>> PostLocation(LocationDTO locationDto)
