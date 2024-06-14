@@ -9,13 +9,31 @@ public class HealthScoreController : ControllerBase
 {
     private readonly IHealthScoreRepository _healthScoreRepository;
     private readonly ICropRepository _cropRepository;
+    private readonly IConditionThresholdRepository _conditionThresholdRepository;
+    private readonly HealthEvaluatorService _healthEvaluatorService;
     private readonly IMapper _mapper;
 
-    public HealthScoreController(IHealthScoreRepository healthScoreRepository, ICropRepository cropRepository, IMapper mapper)
+    public HealthScoreController(IHealthScoreRepository healthScoreRepository,
+        ICropRepository cropRepository, IMapper mapper,
+        IConditionThresholdRepository conditionThresholdRepository, 
+        HealthEvaluatorService healthEvaluatorService)
     {
         _healthScoreRepository = healthScoreRepository;
         _cropRepository = cropRepository;
+        _conditionThresholdRepository = conditionThresholdRepository;
+        _healthEvaluatorService = healthEvaluatorService;
         _mapper = mapper;
+    }
+
+    [HttpGet]
+    public async Task<ActionResult<IEnumerable<HealthScore>>> GetHealthScore()
+    {
+        var healthScores = await _healthScoreRepository.GetAllHealthScoresAsync();
+        if (healthScores == null)
+        {
+            return NotFound();
+        }
+        return Ok(healthScores);
     }
 
     // GET: api/HealthScore/{id}
@@ -30,15 +48,15 @@ public class HealthScoreController : ControllerBase
         return _mapper.Map<HealthScoreDto>(healthScore);
     }
 
-    [HttpGet("byCrop/{cropId}")]
-    public async Task<ActionResult<IEnumerable<HealthScoreDto>>> GetHealthScoresByCrop(int cropId)
+    [HttpGet("byCrop/{locationId}")]
+    public async Task<ActionResult<HealthScoreDto>> GetHealthScoresByLocation(int locationId)
     {
-        var healthScores = await _healthScoreRepository.GetHealthScoresByCropIdAsync(cropId);
-        if (!healthScores.Any())
+        var healthScore = await _healthScoreRepository.GetHealthScoreByLocationIdAsync(locationId);
+        if (healthScore == null)
         {
-            return NotFound($"No health scores found for crop with ID {cropId}.");
+            return NotFound($"No health scores found for crop with ID {locationId}.");
         }
-        return Ok(_mapper.Map<IEnumerable<HealthScoreDto>>(healthScores));
+        return Ok(_mapper.Map<HealthScoreDto>(healthScore));
     }
 
     // POST: api/HealthScore
@@ -72,4 +90,36 @@ public class HealthScoreController : ControllerBase
         await _healthScoreRepository.UpdateHealthScoreAsync(healthScore);
         return NoContent();
     }
+
+    // PUT: api/HealthScore/{id}
+    // [HttpPut("{id}")]
+    // public async Task<ActionResult<HealthScoreDto>> UpdateHealthScore(int id, WeatherDTO weatherDTO)
+    // {
+    //     var healthScore = await _healthScoreRepository.GetHealthScoreByIdAsync(id);
+    //     if (healthScore == null)
+    //     {
+    //         return NotFound($"HealthScore with ID {id} not found.");
+    //     }
+
+    //     // Assume the ConditionThreshold is retrieved based on some logic or another service
+    //     var threshold = _conditionThresholdRepository.; // This needs to be properly fetched or passed in
+
+    //     // Check if the new weather data is newer than the last update
+    //     if (weatherDTO.Date > healthScore.Date)
+    //     {
+    //         // Evaluate the temperature impact starting from the current score
+    //         double updatedScore = _healthEvaluatorService.EvaluateTemperatureImpact(weatherDTO, threshold, 
+    //             _mapper.Map<HealthScoreDto>(healthScore));
+            
+    //         // Update the health score and date with the new values
+    //         healthScore.Score = updatedScore;
+    //         healthScore.Date = weatherDTO.Date;
+
+    //         await _healthScoreRepository.UpdateHealthScoreAsync(healthScore);
+    //         return Ok(_mapper.Map<HealthScoreDto>(healthScore)); // Return updated score
+    //     }
+
+    //     return BadRequest("The provided weather data is not newer than the existing score data.");
+    // }
+
 }

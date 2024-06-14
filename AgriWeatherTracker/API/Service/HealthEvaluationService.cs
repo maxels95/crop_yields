@@ -1,31 +1,32 @@
 public class HealthEvaluatorService
 {
-    public void EvaluateTemperatureImpact(WeatherDTO weather, ConditionThresholdDTO threshold, HealthScoreDto healthScore)
+    // This method now accepts an existing HealthScoreDto and returns an updated score.
+    public double EvaluateTemperatureImpact(WeatherDTO weather, ConditionThreshold optimal, ConditionThreshold adverse, HealthScore healthScore)
     {
-        // Reset score to 0 if within optimal temperature range
-        if (weather.Temperature >= threshold.MinTemperature && weather.Temperature <= threshold.MaxTemperature)
+        double score = healthScore.Score; // Start with the existing score.
+
+        // Check each temperature severity level and update the score accordingly.
+        if (weather.Temperature >= optimal.MinTemperature && weather.Temperature <= optimal.MaxTemperature)
         {
-            healthScore.Score = 0;
+            score = 0; // Optimal conditions reset the score to 0.
         }
-        else
+        else if (weather.Temperature >= adverse.MildMinTemp && weather.Temperature <= adverse.MildMaxTemp)
         {
-            // Check each temperature severity level and update the health score accordingly
-            if (weather.Temperature >= threshold.MildMinTemp && weather.Temperature <= threshold.MildMaxTemp)
-            {
-                healthScore.Score += 100.0 / threshold.MildResilienceDuration;
-            }
-            else if (weather.Temperature >= threshold.ModerateMinTemp && weather.Temperature <= threshold.ModerateMaxTemp)
-            {
-                healthScore.Score += 100.0 / threshold.ModerateResilienceDuration;
-            }
-            else if (weather.Temperature >= threshold.SevereMinTemp && weather.Temperature <= threshold.SevereMaxTemp)
-            {
-                healthScore.Score += 100.0 / threshold.SevereResilienceDuration;
-            }
-            else if (weather.Temperature >= threshold.ExtremeMinTemp && weather.Temperature <= threshold.ExtremeMaxTemp)
-            {
-                healthScore.Score += 100.0 / threshold.ExtremeResilienceDuration;
-            }
+            score += 100.0 / adverse.MildResilienceDuration;
         }
+        else if (weather.Temperature >= adverse.ModerateMinTemp && weather.Temperature <= adverse.ModerateMaxTemp)
+        {
+            score += 100.0 / adverse.ModerateResilienceDuration;
+        }
+        else if (weather.Temperature >= adverse.SevereMinTemp && weather.Temperature <= adverse.SevereMaxTemp)
+        {
+            score += 100.0 / adverse.SevereResilienceDuration;
+        }
+        else if (weather.Temperature >= adverse.ExtremeMinTemp && weather.Temperature <= adverse.ExtremeMaxTemp)
+        {
+            score += 100.0 / adverse.ExtremeResilienceDuration;
+        }
+
+        return score; // Return the modified score.
     }
 }

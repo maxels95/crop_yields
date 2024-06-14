@@ -81,11 +81,12 @@ public class WeatherRepository : IWeatherRepository
     }
 
     public async Task<IEnumerable<Weather>> GetWeatherByLocationAndDateRangeAsync(int locationId, DateTime startDate, DateTime endDate)
-{
-    return await _context.Weathers
-                         .Where(w => w.Location.Id == locationId && w.Date >= startDate && w.Date <= endDate)
-                         .ToListAsync();
-}
+    {
+        return await _context.Weathers
+                            .Where(w => w.Location.Id == locationId && w.Date >= startDate && w.Date <= endDate)
+                            .OrderBy(w => w.Date)  // Adding order by to sort by date
+                            .ToListAsync();
+    }
 
 
 }

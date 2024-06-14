@@ -26,7 +26,15 @@ public class CropRepository : ICropRepository
 
     public async Task<Crop> GetCropByIdAsync(int cropId)
     {
-        return await _context.Crops.FindAsync(cropId);
+        return await _context.Crops
+                        .Include(c => c.GrowthCycles) // Include Growth Cycles
+                        .ThenInclude(gc => gc.Stages) // Include Stages in Growth Cycles
+                        .ThenInclude(s => s.OptimalConditions) // Include Optimal Conditions for each Stage
+                        .Include(c => c.GrowthCycles) // Include Growth Cycles again for another path
+                        .ThenInclude(gc => gc.Stages) // Include Stages in Growth Cycles
+                        .ThenInclude(s => s.AdverseConditions) // Include Adverse Conditions for each Stage
+                        .Include(c => c.Locations) // Include Locations related to the Crop
+                        .FirstOrDefaultAsync(c => c.Id == cropId);
     }
 
     public async Task CreateCropAsync(Crop crop)

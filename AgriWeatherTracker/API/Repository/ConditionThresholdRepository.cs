@@ -20,6 +20,11 @@ public class ConditionThresholdRepository : IConditionThresholdRepository
         return await _context.Set<ConditionThreshold>().FindAsync(id);
     }
 
+    public async Task<ConditionThreshold> GetByCropIdAsync(int id)
+    {
+        return await _context.Set<ConditionThreshold>().FindAsync(id);
+    }
+
     public async Task AddAsync(ConditionThreshold conditionThreshold)
     {
         _context.Set<ConditionThreshold>().Add(conditionThreshold);

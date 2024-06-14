@@ -12,16 +12,30 @@ public class HealthScoreRepository : IHealthScoreRepository
         _context = context;
     }
 
+    public async Task<IEnumerable<HealthScore>> GetAllHealthScoresAsync()
+    {
+        return await _context.HealthScores.ToListAsync();
+    }
+
     public async Task<HealthScore> GetHealthScoreByIdAsync(int id)
     {
         return await _context.HealthScores.Include(hs => hs.Crop).FirstOrDefaultAsync(hs => hs.Id == id);
     }
 
-    public async Task<IEnumerable<HealthScore>> GetHealthScoresByCropIdAsync(int cropId)
+    public async Task<HealthScore> GetHealthScoreByLocationIdAsync(int locationId)
     {
-        return await _context.HealthScores
-                             .Where(hs => hs.CropId == cropId)
-                             .ToListAsync();
+        var healthScore = await _context.HealthScores
+                                    .Where(hs => hs.LocationId == locationId)
+                                    .FirstOrDefaultAsync();
+        
+        if (healthScore == null)
+        {
+            // Handle the case where no health score is found
+            // For example, you might want to log this or initialize a new HealthScore
+            return null;  // Or throw a custom exception that your service layer can catch and handle appropriately
+        }
+
+        return healthScore;
     }
 
     public async Task CreateHealthScoreAsync(HealthScore healthScore)
