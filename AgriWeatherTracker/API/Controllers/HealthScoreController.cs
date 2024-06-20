@@ -18,79 +18,115 @@ public class HealthScoreController : ControllerBase
         IConditionThresholdRepository conditionThresholdRepository, 
         HealthEvaluatorService healthEvaluatorService)
     {
-        _healthScoreRepository = healthScoreRepository;
-        _cropRepository = cropRepository;
-        _conditionThresholdRepository = conditionThresholdRepository;
-        _healthEvaluatorService = healthEvaluatorService;
-        _mapper = mapper;
+        _healthScoreRepository = healthScoreRepository ?? throw new ArgumentNullException(nameof(healthScoreRepository));
+        _cropRepository = cropRepository ?? throw new ArgumentNullException(nameof(cropRepository));
+        _conditionThresholdRepository = conditionThresholdRepository ?? throw new ArgumentNullException(nameof(conditionThresholdRepository));
+        _healthEvaluatorService = healthEvaluatorService ?? throw new ArgumentNullException(nameof(healthEvaluatorService));
+        _mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
     }
 
     [HttpGet]
     public async Task<ActionResult<IEnumerable<HealthScore>>> GetHealthScore()
     {
-        var healthScores = await _healthScoreRepository.GetAllHealthScoresAsync();
-        if (healthScores == null)
+        try
         {
-            return NotFound();
+            var healthScores = await _healthScoreRepository.GetAllHealthScoresAsync();
+            if (healthScores == null || !healthScores.Any())
+            {
+                return NotFound("No health scores found.");
+            }
+            return Ok(healthScores);
         }
-        return Ok(healthScores);
+        catch (Exception ex)
+        {
+            return StatusCode(500, $"Internal server error: {ex.Message}");
+        }
     }
 
     // GET: api/HealthScore/{id}
     [HttpGet("{id}")]
     public async Task<ActionResult<HealthScoreDto>> GetHealthScore(int id)
     {
-        var healthScore = await _healthScoreRepository.GetHealthScoreByIdAsync(id);
-        if (healthScore == null)
+        try
         {
-            return NotFound();
+            var healthScore = await _healthScoreRepository.GetHealthScoreByIdAsync(id);
+            if (healthScore == null)
+            {
+                return NotFound($"HealthScore with ID {id} not found.");
+            }
+            return Ok(_mapper.Map<HealthScoreDto>(healthScore));
         }
-        return _mapper.Map<HealthScoreDto>(healthScore);
+        catch (Exception ex)
+        {
+            return StatusCode(500, $"Internal server error: {ex.Message}");
+        }
     }
 
     [HttpGet("byCrop/{locationId}")]
     public async Task<ActionResult<HealthScoreDto>> GetHealthScoresByLocation(int locationId)
     {
-        var healthScore = await _healthScoreRepository.GetHealthScoreByLocationIdAsync(locationId);
-        if (healthScore == null)
+        try
         {
-            return NotFound($"No health scores found for crop with ID {locationId}.");
+            var healthScore = await _healthScoreRepository.GetHealthScoreByLocationIdAsync(locationId);
+            if (healthScore == null)
+            {
+                return NotFound($"No health scores found for location with ID {locationId}.");
+            }
+            return Ok(_mapper.Map<HealthScoreDto>(healthScore));
         }
-        return Ok(_mapper.Map<HealthScoreDto>(healthScore));
+        catch (Exception ex)
+        {
+            return StatusCode(500, $"Internal server error: {ex.Message}");
+        }
     }
 
     // POST: api/HealthScore
     [HttpPost]
     public async Task<ActionResult<HealthScoreDto>> PostHealthScore(HealthScoreDto healthScoreDto)
     {
-        var crop = await _cropRepository.GetCropByIdAsync(healthScoreDto.CropId);
-        var healthScore = _mapper.Map<HealthScore>(healthScoreDto);
+        try
+        {
+            var crop = await _cropRepository.GetCropByIdAsync(healthScoreDto.CropId);
+            if (crop == null)
+            {
+                return NotFound($"Crop with ID {healthScoreDto.CropId} not found.");
+            }
 
-        if (crop != null) {
-                _cropRepository.SetEntityStateUnchanged(crop);
-                healthScore.Crop = crop;
+            var healthScore = _mapper.Map<HealthScore>(healthScoreDto);
+            _cropRepository.SetEntityStateUnchanged(crop);
+            healthScore.Crop = crop;
+
+            await _healthScoreRepository.CreateHealthScoreAsync(healthScore);
+            return CreatedAtAction(nameof(GetHealthScore), new { id = healthScore.Id }, _mapper.Map<HealthScoreDto>(healthScore));
         }
-
-        await _healthScoreRepository.CreateHealthScoreAsync(healthScore);
-        return CreatedAtAction(nameof(GetHealthScore), new { id = healthScore.Id }, _mapper.Map<HealthScoreDto>(healthScore));
+        catch (Exception ex)
+        {
+            return StatusCode(500, $"Internal server error: {ex.Message}");
+        }
     }
 
     // PUT: api/HealthScore/{id}
     [HttpPut("{id}")]
     public async Task<IActionResult> UpdateHealthScore(int id, double score)
     {
-        var healthScore = await _healthScoreRepository.GetHealthScoreByIdAsync(id);
-        if (healthScore == null)
+        try
         {
-            return NotFound();
+            var healthScore = await _healthScoreRepository.GetHealthScoreByIdAsync(id);
+            if (healthScore == null)
+            {
+                return NotFound($"HealthScore with ID {id} not found.");
+            }
+
+            healthScore.Score = score;
+            healthScore.Date = DateTime.UtcNow;
+            await _healthScoreRepository.UpdateHealthScoreAsync(healthScore);
+            return NoContent();
         }
-
-        healthScore.Score = score;
-        healthScore.Date = DateTime.UtcNow;
-        await _healthScoreRepository.UpdateHealthScoreAsync(healthScore);
-        return NoContent();
+        catch (Exception ex)
+        {
+            return StatusCode(500, $"Internal server error: {ex.Message}");
+        }   
     }
-
     // PUT: api/HealthScore/{id}
     // [HttpPut("{id}")]
     // public async Task<ActionResult<HealthScoreDto>> UpdateHealthScore(int id, WeatherDTO weatherDTO)
@@ -121,5 +157,4 @@ public class HealthScoreController : ControllerBase
 
     //     return BadRequest("The provided weather data is not newer than the existing score data.");
     // }
-
 }

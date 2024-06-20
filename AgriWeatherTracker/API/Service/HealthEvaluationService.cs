@@ -10,21 +10,21 @@ public class HealthEvaluatorService
         {
             score = 0; // Optimal conditions reset the score to 0.
         }
-        else if (weather.Temperature >= adverse.MildMinTemp && weather.Temperature <= adverse.MildMaxTemp)
+        else if (weather.Temperature >= adverse.ExtremeMinTemp && weather.Temperature <= adverse.ExtremeMaxTemp)
         {
-            score += 100.0 / adverse.MildResilienceDuration;
-        }
-        else if (weather.Temperature >= adverse.ModerateMinTemp && weather.Temperature <= adverse.ModerateMaxTemp)
-        {
-            score += 100.0 / adverse.ModerateResilienceDuration;
+            score += 100.0 / adverse.ExtremeResilienceDuration;
         }
         else if (weather.Temperature >= adverse.SevereMinTemp && weather.Temperature <= adverse.SevereMaxTemp)
         {
             score += 100.0 / adverse.SevereResilienceDuration;
         }
-        else if (weather.Temperature >= adverse.ExtremeMinTemp && weather.Temperature <= adverse.ExtremeMaxTemp)
+        else if (weather.Temperature >= adverse.ModerateMinTemp && weather.Temperature <= adverse.ModerateMaxTemp)
         {
-            score += 100.0 / adverse.ExtremeResilienceDuration;
+            score += 100.0 / adverse.ModerateResilienceDuration;
+        }
+        else if (weather.Temperature >= adverse.MildMinTemp && weather.Temperature <= adverse.MildMaxTemp)
+        {
+            score += 100.0 / adverse.MildResilienceDuration;
         }
 
         return score; // Return the modified score.
