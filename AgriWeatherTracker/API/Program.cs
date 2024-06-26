@@ -3,6 +3,8 @@ using Microsoft.Extensions.DependencyInjection;
 using AgriWeatherTracker.Data;
 using AutoMapper;
 using System.Reflection;
+using Azure.Identity;
+using Azure.Security.KeyVault.Secrets;
 
 // Enable legacy timestamp behavior
 AppContext.SetSwitch("Npgsql.EnableLegacyTimestampBehavior", true);
@@ -15,6 +17,16 @@ builder.Services.AddControllers().AddJsonOptions(options =>
 {
     options.JsonSerializerOptions.ReferenceHandler = System.Text.Json.Serialization.ReferenceHandler.IgnoreCycles;
 });
+
+// Retrieve Key Vault Endpoint from app settings
+var keyVaultEndpoint = builder.Configuration["KeyVault:VaultUri"];
+
+if (!string.IsNullOrEmpty(keyVaultEndpoint))
+{
+    // Add Azure Key Vault to the configuration pipeline
+    builder.Configuration.AddAzureKeyVault(new Uri(keyVaultEndpoint), new DefaultAzureCredential());
+}
+
 builder.Services.AddAutoMapper(Assembly.GetExecutingAssembly());
 builder.Services.AddScoped<ICropRepository, CropRepository>();
 builder.Services.AddScoped<IWeatherRepository, WeatherRepository>();
@@ -25,6 +37,7 @@ builder.Services.AddScoped<IGrowthStageRepository, GrowthStageRepository>();
 builder.Services.AddScoped<IHealthScoreRepository, HealthScoreRepository>();
 builder.Services.AddScoped<WeatherHealthService>();
 builder.Services.AddScoped<HealthEvaluatorService>();
+builder.Services.AddTransient<IEmailService, SendGridEmailService>();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
