@@ -1,6 +1,7 @@
 using AgriWeatherTracker.Models;
 using AutoMapper;
 
+namespace AgriWeatherTracker.Mapper;
 public class MappingProfile : Profile
 {
     public MappingProfile()

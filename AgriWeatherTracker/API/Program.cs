@@ -5,6 +5,7 @@ using AutoMapper;
 using System.Reflection;
 using Azure.Identity;
 using Azure.Security.KeyVault.Secrets;
+using AgriWeatherTracker.Service;
 
 // Enable legacy timestamp behavior
 AppContext.SetSwitch("Npgsql.EnableLegacyTimestampBehavior", true);

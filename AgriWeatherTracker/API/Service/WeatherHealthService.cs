@@ -1,12 +1,14 @@
 using AgriWeatherTracker.Models;
 using AutoMapper;
 
+namespace AgriWeatherTracker.Service;
 public class WeatherHealthService
 {
     private readonly IWeatherRepository _weatherRepository;
     private readonly ICropRepository _cropRepository;
     private readonly IHealthScoreRepository _healthScoreRepository;
     private readonly HealthEvaluatorService _healthEvaluatorService;
+    private readonly IEmailService _emailService;
     private readonly IMapper _mapper;
 
     public WeatherHealthService(
@@ -14,12 +16,14 @@ public class WeatherHealthService
         ICropRepository cropRepository,
         IHealthScoreRepository healthScoreRepository,
         HealthEvaluatorService healthEvaluatorService,
+        IEmailService emailService,
         IMapper mapper)
     {
         _weatherRepository = weatherRepository;
         _cropRepository = cropRepository;
         _healthScoreRepository = healthScoreRepository;
         _healthEvaluatorService = healthEvaluatorService;
+        _emailService = emailService;
         _mapper = mapper;
     }
 
@@ -59,14 +63,15 @@ public class WeatherHealthService
                 healtScores[weather.Location.Id].Score = newScore;
                 healtScores[weather.Location.Id].Date = weather.Date;
 
-                Console.WriteLine("---------> HELLO <------------");
-
                 if (newScore >= 100)
                 {
                     returnStrings.Add($"Buy signal generated for {crop.Name}!");
                     returnStrings.Add($"score: {newScore}");
                     returnStrings.Add($"Location: {weather.Location.Name} | Date: {weather.Date} | Latest temperature: {weather.Temperature} ");
                     returnStrings.Add("---------------------------------------------------------------");
+
+                    string emailBody = $"Alert: Buy signal generated for {crop.Name}!\nScore: {newScore}\nLocation: {weather.Location.Name} | Date: {weather.Date} | Temperature: {weather.Temperature}";
+                    await _emailService.SendEmailAsync("your-email@example.com", "Health Score Alert", emailBody, null, null);
                 }
             }
             

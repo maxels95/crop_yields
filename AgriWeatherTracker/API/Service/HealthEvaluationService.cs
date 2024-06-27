@@ -1,3 +1,4 @@
+namespace AgriWeatherTracker.Service;
 public class HealthEvaluatorService
 {
     // This method now accepts an existing HealthScoreDto and returns an updated score.

@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Mvc;
 using AgriWeatherTracker.Models;
 using AgriWeatherTracker.Data;
 using AutoMapper;
+using AgriWeatherTracker.Service;
 
 [Route("api/[controller]")]
 [ApiController]
