@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "dgSpecHash": "Vd6pikRAMqzfvs74NACKO/x8Ca/u/9j4ytmzu5vRpx7HCqZwFmRSLdO45Wmgx2wz0JMRad9CqFZIT+gbYWTqJQ==",
+  "dgSpecHash": "GIYFnxtLr5w=",
   "success": true,
   "projectFilePath": "/home/mikael/Desktop/Projects/Crop_yields/crop_yields/AgriWeatherTracker/tests/WeatherTracker.Tests/WeatherTracker.Tests.csproj",
   "expectedPackageFiles": [
