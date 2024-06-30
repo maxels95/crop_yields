@@ -30,3 +30,15 @@ jobs:
 
     - name: Test
       run: dotnet test --no-build --verbosity normal ./AgriWeatherTracker/tests/WeatherTracker.Tests/WeatherTracker.Tests.csproj
+
+    - name: 'Login via Az module'
+      uses: azure/login@v1
+      with:
+        creds: ${{ secrets.AZURE_CREDENTIALS }}
+
+    - name: 'Deploy to Azure WebApp'
+      uses: azure/webapps-deploy@v2
+      with:
+        app-name: 'cropWeatherTracker'
+        package: ./AgriWeatherTracker/API
+        slot-name: 'production' # or your specific slot name, if applicable
