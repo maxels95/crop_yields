@@ -103,4 +103,37 @@ public class ConditionThresholdController : ControllerBase
             _mapper.Map(dto, item);
             await _repository.UpdateAsync(item);
             _logger.LogInformation($"Successfully updated condition threshold with ID {id}.");
-            return NoC
+            return NoContent();
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, $"An error occurred while updating the condition threshold with ID {id}.");
+            return StatusCode(500, $"An error occurred while updating the condition threshold with ID {id}.");
+        }
+    }
+
+    [HttpDelete("{id}")]
+    public async Task<IActionResult> Delete(int id)
+    {
+        _logger.LogInformation($"Deleting condition threshold with ID {id}.");
+
+        try
+        {
+            var item = await _repository.GetByIdAsync(id);
+            if (item == null)
+            {
+                _logger.LogWarning($"ConditionThreshold with ID {id} not found.");
+                return NotFound($"ConditionThreshold with ID {id} not found.");
+            }
+
+            await _repository.DeleteAsync(id);
+            _logger.LogInformation($"Successfully deleted condition threshold with ID {id}.");
+            return NoContent();
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, $"An error occurred while deleting the condition threshold with ID {id}.");
+            return StatusCode(500, $"An error occurred while deleting the condition threshold with ID {id}.");
+        }
+    }
+}
