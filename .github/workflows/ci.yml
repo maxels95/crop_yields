@@ -31,6 +31,9 @@ jobs:
     - name: Test
       run: dotnet test --no-build --verbosity normal ./AgriWeatherTracker/tests/WeatherTracker.Tests/WeatherTracker.Tests.csproj
 
+    - name: Publish
+      run: dotnet publish ./AgriWeatherTracker/API/AgriWeatherTracker.csproj -c Release -o ./publish
+
     - name: 'Login via Az module'
       uses: azure/login@v1
       with:
@@ -40,5 +43,5 @@ jobs:
       uses: azure/webapps-deploy@v2
       with:
         app-name: 'cropWeatherTracker'
-        package: ./AgriWeatherTracker/API
+        package: './publish'
         slot-name: 'production' # or your specific slot name, if applicable
