@@ -14,6 +14,13 @@ var builder = WebApplication.CreateBuilder(args);
 // Enable legacy timestamp behavior for Npgsql
 AppContext.SetSwitch("Npgsql.EnableLegacyTimestampBehavior", true);
 
+// Add logging to verify initial configuration
+var loggerFactory = builder.Services.BuildServiceProvider().GetRequiredService<ILoggerFactory>();
+var logger = loggerFactory.CreateLogger<Program>();
+
+// Log initial configuration
+logger.LogInformation("Starting application configuration...");
+
 // Add services to the container.
 builder.Services.AddControllers().AddJsonOptions(options =>
 {
@@ -22,11 +29,13 @@ builder.Services.AddControllers().AddJsonOptions(options =>
 
 // Retrieve Key Vault Endpoint from app settings
 var keyVaultEndpoint = builder.Configuration["KeyVault:VaultUri"];
+logger.LogInformation($"Key Vault Endpoint: {keyVaultEndpoint}");
 
 if (!string.IsNullOrEmpty(keyVaultEndpoint))
 {
     // Add Azure Key Vault to the configuration pipeline
     builder.Configuration.AddAzureKeyVault(new Uri(keyVaultEndpoint), new DefaultAzureCredential());
+    logger.LogInformation("Added Azure Key Vault to configuration pipeline.");
 }
 
 // Add Application Insights telemetry
@@ -55,8 +64,10 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 // Configure PostgreSQL Database
+var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
+logger.LogInformation($"Using connection string: {connectionString}");
 builder.Services.AddDbContext<AppDbContext>(options =>
-    options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
+    options.UseNpgsql(connectionString));
 
 var app = builder.Build();
 
@@ -84,15 +95,5 @@ if (app.Environment.IsDevelopment() || app.Environment.IsProduction()) // Enable
 app.UseHttpsRedirection();
 app.UseAuthorization();
 app.MapControllers();
-
-// Add logging to verify which environment and connection string are being used
-var loggerFactory = app.Services.GetRequiredService<ILoggerFactory>();
-var logger = loggerFactory.CreateLogger<Program>();
-
-var env = app.Environment.EnvironmentName;
-var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
-
-logger.LogInformation($"ASPNETCORE_ENVIRONMENT: {env}");
-logger.LogInformation($"Using connection string: {connectionString}");
 
 app.Run();
