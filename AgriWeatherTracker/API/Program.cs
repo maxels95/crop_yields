@@ -6,6 +6,8 @@ using System.Reflection;
 using Azure.Identity;
 using Azure.Security.KeyVault.Secrets;
 using AgriWeatherTracker.Service;
+using Microsoft.ApplicationInsights.Extensibility;
+using Microsoft.Extensions.Logging;
 
 // Enable legacy timestamp behavior
 AppContext.SetSwitch("Npgsql.EnableLegacyTimestampBehavior", true);
@@ -28,6 +30,11 @@ if (!string.IsNullOrEmpty(keyVaultEndpoint))
     builder.Configuration.AddAzureKeyVault(new Uri(keyVaultEndpoint), new DefaultAzureCredential());
 }
 
+builder.Services.AddApplicationInsightsTelemetry(builder.Configuration["ApplicationInsights:InstrumentationKey"]);
+builder.Logging.ClearProviders();
+builder.Logging.AddConsole();
+builder.Logging.AddApplicationInsights();
+
 builder.Services.AddAutoMapper(Assembly.GetExecutingAssembly());
 builder.Services.AddScoped<ICropRepository, CropRepository>();
 builder.Services.AddScoped<IWeatherRepository, WeatherRepository>();
@@ -39,6 +46,7 @@ builder.Services.AddScoped<IHealthScoreRepository, HealthScoreRepository>();
 builder.Services.AddScoped<WeatherHealthService>();
 builder.Services.AddScoped<HealthEvaluatorService>();
 builder.Services.AddTransient<IEmailService, SendGridEmailService>();
+
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
@@ -49,26 +57,28 @@ builder.Services.AddDbContext<AppDbContext>(options =>
 
 var app = builder.Build();
 
-// Apply migrations at startup
-using (var scope = app.Services.CreateScope())
+// Apply migrations at startup only in production
+if (app.Environment.IsProduction())
 {
-    var dbContext = scope.ServiceProvider.GetRequiredService<AppDbContext>();
-    dbContext.Database.Migrate();
+    using (var scope = app.Services.CreateScope())
+    {
+        var dbContext = scope.ServiceProvider.GetRequiredService<AppDbContext>();
+        dbContext.Database.Migrate();
+    }
 }
 
 // Configure the HTTP request pipeline.
-// if (app.Environment.IsDevelopment())
-// {
-//     app.UseSwagger();
-//     app.UseSwaggerUI();
-// }
-app.UseSwagger();
-app.UseSwaggerUI();
+if (app.Environment.IsDevelopment() || app.Environment.IsProduction()) // Enable Swagger in both Development and Production
+{
+    app.UseSwagger();
+    app.UseSwaggerUI(c =>
+    {
+        c.SwaggerEndpoint("/swagger/v1/swagger.json", "My API V1");
+        c.RoutePrefix = string.Empty; // Set Swagger UI at the app's root
+    });
+}
 
 app.UseHttpsRedirection();
-
 app.UseAuthorization();
-
 app.MapControllers();
-
 app.Run();
