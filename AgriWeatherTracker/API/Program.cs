@@ -9,13 +9,12 @@ using AgriWeatherTracker.Service;
 using Microsoft.ApplicationInsights.Extensibility;
 using Microsoft.Extensions.Logging;
 
-// Enable legacy timestamp behavior
-AppContext.SetSwitch("Npgsql.EnableLegacyTimestampBehavior", true);
-
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
+// Enable legacy timestamp behavior for Npgsql
+AppContext.SetSwitch("Npgsql.EnableLegacyTimestampBehavior", true);
 
+// Add services to the container.
 builder.Services.AddControllers().AddJsonOptions(options =>
 {
     options.JsonSerializerOptions.ReferenceHandler = System.Text.Json.Serialization.ReferenceHandler.IgnoreCycles;
@@ -30,12 +29,16 @@ if (!string.IsNullOrEmpty(keyVaultEndpoint))
     builder.Configuration.AddAzureKeyVault(new Uri(keyVaultEndpoint), new DefaultAzureCredential());
 }
 
+// Add Application Insights telemetry
 builder.Services.AddApplicationInsightsTelemetry(builder.Configuration["ApplicationInsights:InstrumentationKey"]);
 builder.Logging.ClearProviders();
 builder.Logging.AddConsole();
 builder.Logging.AddApplicationInsights();
 
+// Add AutoMapper
 builder.Services.AddAutoMapper(Assembly.GetExecutingAssembly());
+
+// Add scoped services
 builder.Services.AddScoped<ICropRepository, CropRepository>();
 builder.Services.AddScoped<IWeatherRepository, WeatherRepository>();
 builder.Services.AddScoped<ILocationRepository, LocationRepository>();
@@ -47,7 +50,7 @@ builder.Services.AddScoped<WeatherHealthService>();
 builder.Services.AddScoped<HealthEvaluatorService>();
 builder.Services.AddTransient<IEmailService, SendGridEmailService>();
 
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
+// Configure Swagger/OpenAPI
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
@@ -81,4 +84,15 @@ if (app.Environment.IsDevelopment() || app.Environment.IsProduction()) // Enable
 app.UseHttpsRedirection();
 app.UseAuthorization();
 app.MapControllers();
+
+// Add logging to verify which environment and connection string are being used
+var loggerFactory = app.Services.GetRequiredService<ILoggerFactory>();
+var logger = loggerFactory.CreateLogger<Program>();
+
+var env = app.Environment.EnvironmentName;
+var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
+
+logger.LogInformation($"ASPNETCORE_ENVIRONMENT: {env}");
+logger.LogInformation($"Using connection string: {connectionString}");
+
 app.Run();
