@@ -98,9 +98,26 @@ try
     // Configure PostgreSQL Database
     try
     {
+        // Retrieve connection string
         var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
-        Console.WriteLine($"Using connection string: {connectionString}");
-        logger.LogInformation($"Using connection string: {connectionString}");
+        if (string.IsNullOrEmpty(connectionString))
+        {
+            connectionString = Environment.GetEnvironmentVariable("DefaultConnection");
+        }
+
+        if (string.IsNullOrEmpty(connectionString))
+        {
+            throw new Exception("Connection string 'DefaultConnection' is not configured.");
+        }
+
+        // Sanitize the connection string for logging (avoid logging sensitive information)
+        var sanitizedConnectionString = connectionString
+            .Replace("Password=", "Password=******")
+            .Replace("username=", "username=******");
+
+        Console.WriteLine($"Retrieved connection string: {sanitizedConnectionString}");
+        logger.LogInformation($"Retrieved connection string: {sanitizedConnectionString}");
+
         builder.Services.AddDbContext<AppDbContext>(options =>
             options.UseNpgsql(connectionString));
         logger.LogInformation("Configured PostgreSQL Database.");
@@ -133,6 +150,12 @@ try
             logger.LogError(ex, "Error applying database migrations.");
             throw;
         }
+
+        // Set the port to 8080 in production
+        var port = Environment.GetEnvironmentVariable("PORT") ?? "8080";
+        app.Urls.Add($"http://*:{port}");
+        Console.WriteLine($"Running on port {port}");
+        logger.LogInformation($"Running on port {port}");
     }
 
     // Configure the HTTP request pipeline.
