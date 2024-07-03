@@ -31,17 +31,23 @@ jobs:
     - name: Test
       run: dotnet test --no-build --verbosity normal ./AgriWeatherTracker/tests/WeatherTracker.Tests/WeatherTracker.Tests.csproj
 
-    - name: Publish
-      run: dotnet publish ./AgriWeatherTracker/API/AgriWeatherTracker.csproj -c Release -o ./publish
+    - name: Build Docker image
+      run: docker build -t cropweathertracker:latest -f ./AgriWeatherTracker/API/Dockerfile .
 
-    - name: 'Login via Az module'
+    - name: 'Login to Azure'
       uses: azure/login@v1
       with:
         creds: ${{ secrets.AZURE_CREDENTIALS }}
 
-    - name: 'Deploy to Azure WebApp'
+    - name: Push Docker image to ACR
+      run: |
+        az acr login --name ${{ secrets.ACR_NAME }}
+        docker tag cropweathertracker:latest ${{ secrets.ACR_LOGIN_SERVER }}/cropweathertracker:latest
+        docker push ${{ secrets.ACR_LOGIN_SERVER }}/cropweathertracker:latest
+
+    - name: 'Deploy to Azure Web App for Containers'
       uses: azure/webapps-deploy@v2
       with:
         app-name: 'cropWeatherTracker'
-        package: './publish'
+        images: '${{ secrets.ACR_LOGIN_SERVER }}/cropweathertracker:latest'
         slot-name: 'production' # or your specific slot name, if applicable
