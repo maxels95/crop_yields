@@ -3,8 +3,7 @@ using Microsoft.Extensions.DependencyInjection;
 using AgriWeatherTracker.Data;
 using AutoMapper;
 using System.Reflection;
-using Azure.Identity;
-using Azure.Security.KeyVault.Secrets;
+// using Azure.Identity;
 using AgriWeatherTracker.Service;
 using Microsoft.ApplicationInsights.Extensibility;
 using Microsoft.Extensions.Logging;
@@ -44,27 +43,27 @@ try
     Console.WriteLine($"Key Vault Endpoint: {keyVaultEndpoint}");
     logger.LogInformation($"Key Vault Endpoint: {keyVaultEndpoint}");
 
-    if (!string.IsNullOrEmpty(keyVaultEndpoint))
-    {
-        try
-        {
-            // Add Azure Key Vault to the configuration pipeline
-            builder.Configuration.AddAzureKeyVault(new Uri(keyVaultEndpoint), new DefaultAzureCredential());
-            Console.WriteLine("Added Azure Key Vault to configuration pipeline.");
-            logger.LogInformation("Added Azure Key Vault to configuration pipeline.");
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine($"Exception during Key Vault setup: {ex}");
-            logger.LogError(ex, "Error adding Azure Key Vault to configuration pipeline.");
-            throw;
-        }
-    }
-    else
-    {
-        Console.WriteLine("Key Vault Endpoint is not configured.");
-        logger.LogWarning("Key Vault Endpoint is not configured.");
-    }
+    // if (!string.IsNullOrEmpty(keyVaultEndpoint))
+    // {
+    //     try
+    //     {
+    //         // Add Azure Key Vault to the configuration pipeline
+    //         builder.Configuration.AddAzureKeyVault(new Uri(keyVaultEndpoint), new DefaultAzureCredential());
+    //         Console.WriteLine("Added Azure Key Vault to configuration pipeline.");
+    //         logger.LogInformation("Added Azure Key Vault to configuration pipeline.");
+    //     }
+    //     catch (Exception ex)
+    //     {
+    //         Console.WriteLine($"Exception during Key Vault setup: {ex}");
+    //         logger.LogError(ex, "Error adding Azure Key Vault to configuration pipeline.");
+    //         throw;
+    //     }
+    // }
+    // else
+    // {
+    //     Console.WriteLine("Key Vault Endpoint is not configured.");
+    //     logger.LogWarning("Key Vault Endpoint is not configured.");
+    // }
 
     // Add Application Insights telemetry
     builder.Services.AddApplicationInsightsTelemetry(builder.Configuration["ApplicationInsights:InstrumentationKey"]);
