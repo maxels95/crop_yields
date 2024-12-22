@@ -9,3 +9,5 @@ build_property.EnforceExtendedAnalyzerRules =
 build_property._SupportedPlatformList = Linux,macOS,Windows
 build_property.RootNamespace = WeatherTracker.Tests
 build_property.ProjectDir = /home/mikael/Desktop/Projects/Crop_yields/crop_yields/AgriWeatherTracker/tests/WeatherTracker.Tests/
+build_property.EnableComHosting = 
+build_property.EnableGeneratedComInterfaceComImportInterop = 

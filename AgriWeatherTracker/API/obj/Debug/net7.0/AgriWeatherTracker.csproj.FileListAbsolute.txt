@@ -50,9 +50,10 @@
 /home/mikael/Desktop/Projects/Crop_yields/crop_yields/AgriWeatherTracker/API/obj/Debug/net7.0/staticwebassets.build.json
 /home/mikael/Desktop/Projects/Crop_yields/crop_yields/AgriWeatherTracker/API/obj/Debug/net7.0/staticwebassets.development.json
 /home/mikael/Desktop/Projects/Crop_yields/crop_yields/AgriWeatherTracker/API/obj/Debug/net7.0/scopedcss/bundle/AgriWeatherTracker.styles.css
-/home/mikael/Desktop/Projects/Crop_yields/crop_yields/AgriWeatherTracker/API/obj/Debug/net7.0/AgriWeatherTracker.csproj.CopyComplete
 /home/mikael/Desktop/Projects/Crop_yields/crop_yields/AgriWeatherTracker/API/obj/Debug/net7.0/AgriWeatherTracker.dll
 /home/mikael/Desktop/Projects/Crop_yields/crop_yields/AgriWeatherTracker/API/obj/Debug/net7.0/refint/AgriWeatherTracker.dll
 /home/mikael/Desktop/Projects/Crop_yields/crop_yields/AgriWeatherTracker/API/obj/Debug/net7.0/AgriWeatherTracker.pdb
 /home/mikael/Desktop/Projects/Crop_yields/crop_yields/AgriWeatherTracker/API/obj/Debug/net7.0/AgriWeatherTracker.genruntimeconfig.cache
 /home/mikael/Desktop/Projects/Crop_yields/crop_yields/AgriWeatherTracker/API/obj/Debug/net7.0/ref/AgriWeatherTracker.dll
+/home/mikael/Desktop/Projects/Crop_yields/crop_yields/AgriWeatherTracker/API/obj/Debug/net7.0/AgriWeatherTracker.sourcelink.json
+/home/mikael/Desktop/Projects/Crop_yields/crop_yields/AgriWeatherTracker/API/obj/Debug/net7.0/AgriWeat.FF801F7A.Up2Date
