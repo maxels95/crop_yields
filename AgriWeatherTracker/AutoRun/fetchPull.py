@@ -2,7 +2,7 @@ import os
 from git import Repo
 
 # Path to the repository
-repo_path = repo_path = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
+repo_path = os.path.abspath(os.path.join(os.path.dirname(__file__), "../.."))
 
 # Open the repository
 repo = Repo(repo_path)
