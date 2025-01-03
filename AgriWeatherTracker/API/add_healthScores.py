@@ -17,7 +17,7 @@ def main():
     for location_id in location_ids:
         health_score = {
             "id": 0,  # Placeholder, assuming the API assigns the ID
-            "cropId": 0,  # Placeholder crop ID
+            "cropId": 1,  # Placeholder crop ID
             "locationId": location_id,
             "date": date,
             "score": round(random.uniform(0, 100), 2)  # Random score between 0 and 100
