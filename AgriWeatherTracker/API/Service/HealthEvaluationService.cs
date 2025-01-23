@@ -1,33 +1,63 @@
-namespace AgriWeatherTracker.Service;
-public class HealthEvaluatorService
+using AgriWeatherTracker.Data;
+
+namespace AgriWeatherTracker.Service
 {
-    // This method now accepts an existing HealthScoreDto and returns an updated score.
-    public double EvaluateTemperatureImpact(WeatherDTO weather, ConditionThreshold optimal, ConditionThreshold adverse, HealthScore healthScore)
+    public class HealthEvaluatorService
     {
-        double score = healthScore.Score; // Start with the existing score.
+        private readonly IEnumerable<IWeatherEvaluator> _evaluators;
+        private readonly AppDbContext _dbContext;
 
-        // Check each temperature severity level and update the score accordingly.
-        if (weather.Temperature >= optimal.MinTemperature && weather.Temperature <= optimal.MaxTemperature)
+        public HealthEvaluatorService(IEnumerable<IWeatherEvaluator> evaluators, AppDbContext dbContext)
         {
-            score = 0; // Optimal conditions reset the score to 0.
-        }
-        else if (weather.Temperature >= adverse.ExtremeMinTemp && weather.Temperature <= adverse.ExtremeMaxTemp)
-        {
-            score += 100.0 / adverse.ExtremeResilienceDuration;
-        }
-        else if (weather.Temperature >= adverse.SevereMinTemp && weather.Temperature <= adverse.SevereMaxTemp)
-        {
-            score += 100.0 / adverse.SevereResilienceDuration;
-        }
-        else if (weather.Temperature >= adverse.ModerateMinTemp && weather.Temperature <= adverse.ModerateMaxTemp)
-        {
-            score += 100.0 / adverse.ModerateResilienceDuration;
-        }
-        else if (weather.Temperature >= adverse.MildMinTemp && weather.Temperature <= adverse.MildMaxTemp)
-        {
-            score += 100.0 / adverse.MildResilienceDuration;
+            _evaluators = evaluators;
+            _dbContext = dbContext;
         }
 
-        return score; // Return the modified score.
+        public HealthScore EvaluateWeatherImpact(
+            WeatherDTO weather,
+            ConditionThreshold optimal,
+            ConditionThreshold adverse,
+            HealthScore healthScore)
+        {
+            double positiveImpact = 0;
+            double negativeImpact = 0;
+
+            foreach (var evaluator in _evaluators)
+            {
+                var impact = evaluator.EvaluateImpact(weather, optimal, adverse, healthScore);
+
+                // Adjust impacts dynamically based on context
+                if (evaluator is HumidityEvaluator && weather.Rainfall > optimal.MinRainfall)
+                {
+                    impact *= 0.5; // Reduce humidity penalty if there's sufficient rainfall
+                }
+
+                if (impact > 0)
+                    negativeImpact += impact;
+                else
+                    positiveImpact += Math.Abs(impact);
+            }
+
+            // Calculate combined resilience and score
+            healthScore.Resilience -= negativeImpact;
+            healthScore.Resilience = Math.Max(0, healthScore.Resilience);
+
+            healthScore.Score = Math.Max(0, healthScore.Score + positiveImpact - negativeImpact);
+
+            // Update risk flags
+            healthScore.IsAtRiskOfFungi = CheckFungiRisk(weather, adverse);
+            healthScore.IsAtRiskOfCropLoss = healthScore.Resilience == 0;
+
+            // Persist updated HealthScore
+            _dbContext.HealthScores.Update(healthScore);
+            _dbContext.SaveChanges();
+
+            return healthScore;
+        }
+
+        private bool CheckFungiRisk(WeatherDTO weather, ConditionThreshold adverse)
+        {
+            return weather.Humidity > adverse.MaxHumidity;
+        }
     }
 }

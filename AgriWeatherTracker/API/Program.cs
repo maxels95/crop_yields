@@ -36,6 +36,10 @@ builder.Services.AddScoped<IConditionThresholdRepository, ConditionThresholdRepo
 builder.Services.AddScoped<IGrowthCycleRepository, GrowthCycleRepository>();
 builder.Services.AddScoped<IGrowthStageRepository, GrowthStageRepository>();
 builder.Services.AddScoped<IHealthScoreRepository, HealthScoreRepository>();
+builder.Services.AddScoped<IWeatherEvaluator, HumidityEvaluator>();
+builder.Services.AddScoped<IWeatherEvaluator, WindEvaluator>();
+builder.Services.AddScoped<IWeatherEvaluator, TemperatureEvaluator>();
+builder.Services.AddScoped<IWeatherEvaluator, RainfallEvaluator>();
 builder.Services.AddScoped<WeatherHealthService>();
 builder.Services.AddScoped<HealthEvaluatorService>();
 builder.Services.AddTransient<IEmailService, SendGridEmailService>();

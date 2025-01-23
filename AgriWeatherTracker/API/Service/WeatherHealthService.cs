@@ -55,25 +55,25 @@ public class WeatherHealthService
         {
             var stage = stages.FirstOrDefault(s => s.StartDate <= weather.Date && s.EndDate >= weather.Date);
 
-            if (stage != null)
-            {
-                double newScore = _healthEvaluatorService.EvaluateTemperatureImpact(
-                    _mapper.Map<WeatherDTO>(weather), stage.OptimalConditions, stage.AdverseConditions, healtScores[weather.Location.Id]);
+            // if (stage != null)
+            // {
+            //     double newScore = _healthEvaluatorService.EvaluateTemperatureImpact(
+            //         _mapper.Map<WeatherDTO>(weather), stage.OptimalConditions, stage.AdverseConditions, healtScores[weather.Location.Id]);
                     
-                healtScores[weather.Location.Id].Score = newScore;
-                healtScores[weather.Location.Id].Date = weather.Date;
+            //     healtScores[weather.Location.Id].Score = newScore;
+            //     healtScores[weather.Location.Id].Date = weather.Date;
 
-                if (newScore >= 100)
-                {
-                    returnStrings.Add($"Buy signal generated for {crop.Name}!");
-                    returnStrings.Add($"score: {newScore}");
-                    returnStrings.Add($"Location: {weather.Location.Name} | Date: {weather.Date} | Latest temperature: {weather.Temperature} ");
-                    returnStrings.Add("---------------------------------------------------------------");
+            //     if (newScore >= 100)
+            //     {
+            //         returnStrings.Add($"Buy signal generated for {crop.Name}!");
+            //         returnStrings.Add($"score: {newScore}");
+            //         returnStrings.Add($"Location: {weather.Location.Name} | Date: {weather.Date} | Latest temperature: {weather.Temperature} ");
+            //         returnStrings.Add("---------------------------------------------------------------");
 
-                    string emailBody = $"Alert: Buy signal generated for {crop.Name}!\nScore: {newScore}\nLocation: {weather.Location.Name} | Date: {weather.Date} | Temperature: {weather.Temperature}";
-                    await _emailService.SendEmailAsync("your-email@example.com", "Health Score Alert", emailBody, null, null);
-                }
-            }
+            //         string emailBody = $"Alert: Buy signal generated for {crop.Name}!\nScore: {newScore}\nLocation: {weather.Location.Name} | Date: {weather.Date} | Temperature: {weather.Temperature}";
+            //         await _emailService.SendEmailAsync("your-email@example.com", "Health Score Alert", emailBody, null, null);
+            //     }
+            // }
             
 
             // healthScore.Score = newScore;
